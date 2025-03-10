@@ -37,8 +37,8 @@ func NewGame() *Game {
 }
 
 func (g *Game) Start(humanPlayers, aiPlayers int) (err error) {
-	if humanPlayers+aiPlayers < 2 {
-		return errors.New("a game must have at least 2 players")
+	if humanPlayers+aiPlayers < 2 || humanPlayers+aiPlayers > 4 {
+		return errors.New("a game must have between 2 and 4 players")
 	}
 
 	for i := 0; i < humanPlayers; i++ {

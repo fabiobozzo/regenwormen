@@ -28,3 +28,7 @@ func MustEncloseCharAtIndex(s string, index int) (es string) {
 func RemoveEmojis(s string) string {
 	return strings.TrimSpace(emojiRegex.ReplaceAllString(s, ""))
 }
+
+func Title(s string) string {
+	return strings.ToUpper(s[:1]) + strings.ToLower(s[1:])
+}

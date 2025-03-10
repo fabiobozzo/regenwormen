@@ -31,3 +31,19 @@ func MustReadInt(reader *bufio.Reader, message string) (int, error) {
 
 	return i, nil
 }
+
+func MustReadBool(reader *bufio.Reader, message, trueAnswer, falseAnswer string) (answer, hasAnswer bool) {
+	s := strings.TrimSpace(MustReadString(reader, fmt.Sprintf("%s (%s/%s) ", message, trueAnswer, falseAnswer)))
+
+	if len(s) == 0 {
+		return
+	}
+
+	if strings.Contains(strings.ToLower(trueAnswer), strings.ToLower(s)) {
+		answer, hasAnswer = true, true
+	} else if strings.Contains(strings.ToLower(falseAnswer), strings.ToLower(s)) {
+		answer, hasAnswer = false, true
+	}
+
+	return
+}
