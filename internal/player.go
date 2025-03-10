@@ -16,12 +16,19 @@ const (
 type Player struct {
 	mode  PlayerMode
 	tiles *utils.Stack[Tile]
+	ai    AIStrategy
 }
 
 func NewPlayer(mode PlayerMode) Player {
+	var ai AIStrategy
+	if mode == AI {
+		ai = NewSimpleAIStrategy()
+	}
+
 	return Player{
 		mode:  mode,
 		tiles: utils.NewStack[Tile](),
+		ai:    ai,
 	}
 }
 
@@ -47,4 +54,24 @@ func (p Player) Score() (worms int, values []int) {
 	}
 
 	return
+}
+
+func (p Player) IsAI() bool {
+	return p.mode == AI
+}
+
+func (p Player) AiThink(game *Game) (shouldRoll bool, explanation string) {
+	if !p.IsAI() || p.ai == nil {
+		return false, ""
+	}
+
+	return p.ai.ShouldRoll(game)
+}
+
+func (p Player) AiChoosePick(game *Game) (symbol Symbol, explanation string) {
+	if !p.IsAI() || p.ai == nil {
+		return -1, ""
+	}
+
+	return p.ai.ChooseSymbol(game)
 }

@@ -15,20 +15,32 @@ func handleGameMenu(in *bufio.Reader, game *internal.Game) (exit bool) {
 	}
 	if !doStart {
 		fmt.Println("Player has exited the game")
-
 		return true
 	}
 
-	nPlayers, err := utils.MustReadInt(in, "How many players? ")
-	if err != nil {
-		fmt.Println("Please enter a valid number of players:", err)
+	var humanPlayers, aiPlayers int
+	var err error
 
-		return
+	for {
+		humanPlayers, err = utils.MustReadInt(in, "How many human players? ")
+		if err != nil {
+			fmt.Println("Please enter a valid number:", err)
+
+			continue
+		}
+
+		aiPlayers, err = utils.MustReadInt(in, "How many AI players? ")
+		if err != nil {
+			fmt.Println("Please enter a valid number:", err)
+
+			continue
+		}
+
+		break
 	}
 
-	if err = game.Start(nPlayers, 0); err != nil {
-		fmt.Println("Cannot start the game:", err)
-
+	if err = game.Start(humanPlayers, aiPlayers); err != nil {
+		fmt.Println("Cannot start the game: ", err)
 		return
 	}
 

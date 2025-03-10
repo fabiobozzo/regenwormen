@@ -7,8 +7,9 @@ import (
 )
 
 var (
-	ErrGameOver    = errors.New("the game is over")
-	ErrGameNotOver = errors.New("the game is not over yet")
+	ErrGameOver          = errors.New("the game is over")
+	ErrGameNotOver       = errors.New("the game is not over yet")
+	ErrPlayersOutOfRange = fmt.Errorf("a game must have between %d and %d players", minPlayers, maxPlayers)
 )
 
 type GameState int
@@ -17,6 +18,9 @@ const (
 	GameMenu GameState = iota
 	GameLoop
 	GameOver
+
+	minPlayers = 2
+	maxPlayers = 4
 )
 
 type Game struct {
@@ -37,8 +41,8 @@ func NewGame() *Game {
 }
 
 func (g *Game) Start(humanPlayers, aiPlayers int) (err error) {
-	if humanPlayers+aiPlayers < 2 || humanPlayers+aiPlayers > 4 {
-		return errors.New("a game must have between 2 and 4 players")
+	if humanPlayers+aiPlayers < minPlayers || humanPlayers+aiPlayers > maxPlayers {
+		return ErrPlayersOutOfRange
 	}
 
 	for i := 0; i < humanPlayers; i++ {
@@ -73,6 +77,10 @@ func (g *Game) CurrentTurn() (playerN int, justStarted bool, err error) {
 	}
 
 	return g.turn + 1, len(g.Dice.picked) == 0, nil
+}
+
+func (g *Game) CurrentPlayer() Player {
+	return g.players[g.turn]
 }
 
 func (g *Game) NextTurn() {
@@ -126,7 +134,11 @@ func (g *Game) resolveCurrentTurn() {
 	if err != nil {
 		// If there is no available tile on the board, then try to rob from other players decks.
 		var robbed bool
-		for _, p := range g.players {
+		for i, p := range g.players {
+			if i == g.turn { // Skip current player
+				continue
+			}
+
 			top, hasTiles := p.tiles.Top()
 			if hasTiles && top.Value == diceScore {
 				tile, robbed = p.tiles.Pop()

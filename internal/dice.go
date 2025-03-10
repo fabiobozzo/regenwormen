@@ -95,7 +95,7 @@ func (d *Dice) Roll() []Symbol {
 	d.roll = nil
 
 	for i := 0; i < d.count-len(d.picked); i++ {
-		throw := rand.Intn(5) - 1
+		throw := rand.Intn(6) - 1
 		if throw < 0 {
 			throw = 0
 		}

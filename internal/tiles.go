@@ -70,6 +70,15 @@ func (b *Board) Take(val int) (t Tile, err error) {
 	return
 }
 
+// HasTile checks if a tile with the given value is available
+func (b *Board) HasTile(value int) bool {
+	if value < b.min || value > b.max {
+		return false
+	}
+
+	return len(b.tiles[value]) > 0
+}
+
 func (b *Board) IsEmpty() bool {
 	return len(b.tiles) == 0
 }
