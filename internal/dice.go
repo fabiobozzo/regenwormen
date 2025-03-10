@@ -52,6 +52,10 @@ func SymbolFrom(s string) (Symbol, error) {
 		return -1, ErrInvalidSymbol
 	}
 
+	if strings.TrimSpace(strings.ToLower(s)) == "cheese" {
+		s = "h"
+	}
+
 	switch strings.TrimSpace(strings.ToLower(fmt.Sprintf("%c", s[0]))) {
 	case "w":
 		return Worm, nil

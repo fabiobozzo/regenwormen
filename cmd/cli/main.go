@@ -45,6 +45,8 @@ func main() {
 				return
 			}
 		case internal.GameLoop:
+			var turnStopped bool
+
 			currentPlayerNr, turnHasJustStarted, err := game.CurrentTurn()
 			if err != nil {
 				fmt.Println(err)
@@ -64,7 +66,6 @@ func main() {
 				log.Fatal(err)
 			}
 
-			var turnStopped bool
 			for {
 				roll := game.Dice.Roll()
 				cannotPickFromRoll := !game.Dice.CanPickAnyFromRoll()
@@ -165,7 +166,7 @@ func printSymbolPicker(roll []internal.Symbol, game *internal.Game) {
 			firstCharIndex = 1
 		}
 
-		fmt.Print(utils.MustEncloseCharAtIndex(utils.RemoveEmojis(rollSymbol.String()), firstCharIndex))
+		fmt.Print(utils.MustEncloseCharAtIndex(utils.RemoveEmojis(strings.ToLower(rollSymbol.String())), firstCharIndex))
 		i++
 	}
 }

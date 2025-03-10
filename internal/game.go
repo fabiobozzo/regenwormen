@@ -115,8 +115,8 @@ func (g *Game) String() string {
 }
 
 func (g *Game) resolveCurrentTurn() {
-	diceScore, _ := g.Dice.PickedScore()
-	if diceScore == 0 {
+	diceScore, noWorms := g.Dice.PickedScore()
+	if diceScore == 0 || noWorms {
 		return
 	}
 
